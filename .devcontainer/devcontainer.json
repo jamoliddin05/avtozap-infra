@@ -6,5 +6,8 @@
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
-  "postCreateCommand": "docker compose up -d"
+  "postCreateCommand": "git submodule update --init --recursive && echo \"$AUTH_SERVICE_SECRETS\" > ./services/auth/.env && docker compose up -d",
+  "remoteEnv": {
+    "AUTH_SERVICE_SECRETS": "default_value_if_needed"
+  }
 }
