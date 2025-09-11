@@ -1,0 +1,10 @@
+{
+  "name": "monorepo-dev",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "kong",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "postCreateCommand": "docker compose up -d"
+}

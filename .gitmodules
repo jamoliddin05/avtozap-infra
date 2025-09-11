@@ -1,0 +1,3 @@
+[submodule "services/auth"]
+	path = services/auth
+	url = https://github.com/jamoliddin05/auth-service
