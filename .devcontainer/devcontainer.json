@@ -3,5 +3,14 @@
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "customizations": {
+    "codespaces": {
+      "repositories": {
+        "jamoliddin05/auth-service": {
+          "permissions": "write-all"
+        }
+      }
+    }
   }
 }
