@@ -1,13 +1,17 @@
 {
   "name": "monorepo-dev",
-  "dockerComposeFile": "../docker-compose.yml",
-  "service": "kong",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
-  "postCreateCommand": "git submodule update --init --recursive && echo \"$AUTH_SERVICE_SECRETS\" > ./services/auth/.env && docker compose up -d",
-  "remoteEnv": {
-    "AUTH_SERVICE_SECRETS": "default_value_if_needed"
-  }
+
+  // Runs once at container creation → sets up repos + env files
+  "onCreateCommand": [
+    "git submodule update --init --recursive",
+    "echo \"$AUTH_SERVICE_SECRETS\" > ./services/auth/.env"
+  ],
+
+  // Runs on every start → brings up the stack
+  "postStartCommand": "docker compose up"
 }
