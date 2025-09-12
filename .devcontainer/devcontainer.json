@@ -1,17 +1,7 @@
 {
-  "name": "monorepo-dev",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
-  },
-
-  // Runs once at container creation → sets up repos + env files
-  "onCreateCommand": [
-    "git submodule update --init --recursive",
-    "echo \"$AUTH_SERVICE_SECRETS\" > ./services/auth/.env"
-  ],
-
-  // Runs on every start → brings up the stack
-  "postStartCommand": "docker compose up"
+  }
 }
