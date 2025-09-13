@@ -9,6 +9,9 @@
       "repositories": {
         "jamoliddin05/auth-service": {
           "permissions": "write-all"
+        },
+        "jamoliddin05/frontend-service": {
+          "permissions": "write-all"
         }
       }
     }
