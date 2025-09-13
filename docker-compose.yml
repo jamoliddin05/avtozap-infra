@@ -1,8 +1,40 @@
 version: "3.9"
 
 services:
+  auth:
+    build: ./services/auth
+    container_name: auth
+    volumes:
+      - auth_data:/var/lib/postgresql/data
+      - ./services/auth/cmd:/app/cmd
+      - ./services/auth/internal:/app/internal
+      - ./services/auth/bootstrap:/app/bootstrap
+      - ./services/auth/migrations:/app/migrations
+      - ./services/auth/go.mod:/app/go.mod
+      - ./services/auth/go.sum:/app/go.sum
+    env_file:
+      - ./services/auth/.env
+    command: ["air"]
+    depends_on:
+      - auth-db
+    restart: unless-stopped
+    networks:
+      - shared-net
+
+  auth-db:
+    image: postgres:17
+    container_name: auth-db
+    env_file:
+      - ./services/auth/.env
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - shared-net
+
   kong:
     image: kong:3.8
+    container_name: kong
     environment:
       KONG_DATABASE: "off"
       KONG_DECLARATIVE_CONFIG: /kong/declarative/kong.yml
@@ -17,23 +49,12 @@ services:
       - "8000:8000"
       - "8001:8001"
     networks:
-      - kong-net
+      - shared-net
 
-  auth:
-    build: ./services/auth
-    volumes:
-      - ./services/auth/cmd:/app/cmd
-      - ./services/auth/internal:/app/internal
-      - ./services/auth/bootstrap:/app/bootstrap
-      - ./services/auth/migrations:/app/migrations
-      - ./services/auth/go.mod:/app/go.mod
-      - ./services/auth/go.sum:/app/go.sum
-    env_file:
-      - ./services/auth/.env
-    command: ["air"]
-    networks:
-      - kong-net
+volumes:
+  auth_data:
+  auth_db_data:
 
 networks:
-  kong-net:
+  shared-net:
     driver: bridge
