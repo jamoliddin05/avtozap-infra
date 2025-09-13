@@ -1,5 +1,7 @@
 # Makefile for generating .env and running Docker Compose from root
 
+SHELL := /bin/bash
+
 # List of services (submodules)
 SERVICES := auth
 
