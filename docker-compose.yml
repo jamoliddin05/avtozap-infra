@@ -38,6 +38,8 @@ services:
   auth-db:
     image: postgres:17
     container_name: auth-db
+    ports:
+      - "5432:5432"
     env_file:
       - ./services/auth/.env
     volumes:
