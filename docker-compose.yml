@@ -12,8 +12,8 @@ services:
     volumes:
       - ./services/frontend:/app
       - /app/node_modules
-    environment:
-      - NODE_ENV=development
+    networks:
+      - shared-net
 
   auth:
     build: ./services/auth
