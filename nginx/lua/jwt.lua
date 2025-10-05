@@ -86,10 +86,39 @@ local pem, perr = build_pem(n_bin, e_bin)
 if not pem then return json_response(500, "Failed to build PEM", { perr }) end
 
 -- 6) Verify JWT
-local ok3, verified = pcall(function() return jwt:verify(pem, token) end)
-if not ok3 or not verified or not verified.verified then
-    return json_response(401, "Invalid JWT", { (verified and verified.reason) or verified or "verify failed" })
+-- Determine if we should skip exp (from nginx.conf)
+local jwt_validators = require("resty.jwt-validators")
+
+local skip_exp = ngx.var.jwt_verify_exp == "0"
+ngx.log(ngx.INFO, "[JWT] skip_exp flag is: ", tostring(skip_exp))
+
+-- Build validators table
+local validators = {}
+if not skip_exp then
+    -- Add expiration validator
+    validators.exp = jwt_validators.opt_is_not_expired()
+else
+    ngx.log(ngx.INFO, "[JWT] Skipping expiration validation")
+    -- Empty validators table - no validation
 end
+
+-- Verify JWT with validators
+local ok, verified = pcall(function()
+    return jwt:verify(pem, token, validators)
+end)
+
+if not ok then
+    ngx.log(ngx.ERR, "[JWT] pcall error during verify: ", verified)
+    return json_response(500, "JWT verification failed", { verified })
+end
+
+if not verified or not verified.verified then
+    ngx.log(ngx.ERR, "[JWT] JWT verification failed: ", cjson.encode(verified))
+    return json_response(401, "Invalid JWT", { (verified and verified.reason) or "verify failed" })
+end
+
+ngx.log(ngx.INFO, "[JWT] JWT verified successfully")
+
 
 -- 7) Propagate claims
 local claims = verified.payload or {}
