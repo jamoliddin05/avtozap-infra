@@ -34,8 +34,6 @@ services:
     restart: unless-stopped
     networks:
       - shared-net
-    ports:
-      - 9000:8080
 
   auth-db:
     image: postgres:17
