@@ -5,5 +5,5 @@
 	path = services/frontend
 	url = https://github.com/jamoliddin05/frontend-service
 [submodule "services/products"]
-    path = services/products
-    url = https://github.com/jamoliddin05/products-service-new
+	path = services/products
+	url = https://github.com/jamoliddin05/products-service-new
