@@ -46,6 +46,35 @@ services:
     networks:
       - shared-net
 
+  products:
+    build: ./services/products
+    container_name: products
+    volumes:
+      - products_data:/var/lib/postgresql/data
+      - ./services/products/internal:/app/internal
+      - ./services/products/migrations:/app/migrations
+    env_file:
+      - ./services/products/.env
+    command: [ "air" ]
+    depends_on:
+      - products-db
+    restart: unless-stopped
+    networks:
+      - shared-net
+
+  products-db:
+    image: postgres:17
+    container_name: products-db
+    ports:
+      - "5433:5432"
+    env_file:
+      - ./services/products/.env
+    volumes:
+      - products_db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - shared-net
+
   nginx:
     build: ./nginx
     container_name: nginx
@@ -60,6 +89,8 @@ services:
 volumes:
   auth_data:
   auth_db_data:
+  products_data:
+  products_db_data:
 
 networks:
   shared-net:

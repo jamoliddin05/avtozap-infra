@@ -31,13 +31,19 @@ clean:
 		rm -f ./services/$$s/.env; \
 	done
 
-# Run migrations UP inside auth container
 auth-migrate-up:
 	docker compose exec auth \
 	sh -c 'migrate -path ./migrations -database "postgres://$${POSTGRES_USER}:$${POSTGRES_PASSWORD}@$${POSTGRES_HOST}:$${POSTGRES_PORT}/$${POSTGRES_DB}?sslmode=$${POSTGRES_SSLMODE}" up'
 
-# Run migrations DOWN inside auth container
 auth-migrate-down:
 	docker compose exec auth \
+	sh -c 'migrate -path ./migrations -database "postgres://$${POSTGRES_USER}:$${POSTGRES_PASSWORD}@$${POSTGRES_HOST}:$${POSTGRES_PORT}/$${POSTGRES_DB}?sslmode=$${POSTGRES_SSLMODE}" down'
+
+products-migrate-up:
+	docker compose exec products \
+	sh -c 'migrate -path ./migrations -database "postgres://$${POSTGRES_USER}:$${POSTGRES_PASSWORD}@$${POSTGRES_HOST}:$${POSTGRES_PORT}/$${POSTGRES_DB}?sslmode=$${POSTGRES_SSLMODE}" up'
+
+products-migrate-down:
+	docker compose exec products \
 	sh -c 'migrate -path ./migrations -database "postgres://$${POSTGRES_USER}:$${POSTGRES_PASSWORD}@$${POSTGRES_HOST}:$${POSTGRES_PORT}/$${POSTGRES_DB}?sslmode=$${POSTGRES_SSLMODE}" down'
 
