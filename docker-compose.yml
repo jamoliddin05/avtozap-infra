@@ -14,7 +14,9 @@ services:
     restart: unless-stopped
 
   auth:
-    build: ./services/auth
+    build:
+      context: ./services/auth
+      dockerfile: dockerfiles/app/Dockerfile
     container_name: auth
     volumes:
       - auth_data:/var/lib/postgresql/data
@@ -47,7 +49,9 @@ services:
       - shared-net
 
   products:
-    build: ./services/products
+    build:
+      context: ./services/products
+      dockerfile: dockerfiles/app/Dockerfile
     container_name: products
     volumes:
       - products_data:/var/lib/postgresql/data
