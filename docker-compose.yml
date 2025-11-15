@@ -11,6 +11,9 @@ services:
       - /app/node_modules
     networks:
       - shared-net
+    depends_on:
+      - auth
+      - products
     restart: unless-stopped
 
   auth:
@@ -87,7 +90,7 @@ services:
     networks:
       - shared-net
     depends_on:
-      - auth
+      - frontend
     restart: unless-stopped
 
 volumes:
